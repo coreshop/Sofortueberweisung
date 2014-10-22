@@ -1,0 +1,19 @@
+{
+    "name": "pfaffenbauer/sofortueberweisung",
+    "type": "pimcore-plugin",
+    "license": "Simple BSD",
+    "description": "Sofortueberweisung Payment",
+    "keywords": ["pimcore","sofortueberweisung"],
+    "homepage": "https://github.com/dpfaffenbauer/pimcore-sofortueberweisung",
+    "authors": [
+        {
+            "name": "Dominik Pfaffenbauer",
+            "email": "dominik@pfaffenbauer.at",
+            "homepage": "http://www.pfaffenbauer.at/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+      "smichaelsen/sofortlib-php-payment": "2.0.1"
+    }
+}  
