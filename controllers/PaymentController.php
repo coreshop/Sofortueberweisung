@@ -22,10 +22,11 @@ class Sofortueberweisung_PaymentController extends Payment
         $configkey = \CoreShop\Model\Configuration::get("SOFORTUEBERWEISUNG.KEY");
 
         $sofort = new \Sofort\SofortLib\Sofortueberweisung($configkey);
-        $sofort->setAmount(number_format($this->cart->getTotal(), 2));
+        $sofort->setAmount(Tool::numberFormat($this->cart->getTotal()));
+        $sofort->setVersion("CoreShop " . \CoreShop\Version::getVersion());
         $sofort->setReason("Buy Order (CoreShop)");
         $sofort->setCurrencyCode(Tool::getCurrency()->getIsoCode());
-        $sofort->setSuccessUrl(Pimcore\Tool::getHostUrl() . $this->getModule()->url($this->getModule()->getIdentifier(), "payment-return") . "?cartId=" . $this->cart->getId());
+        $sofort->setSuccessUrl(Pimcore\Tool::getHostUrl() . $this->getModule()->url($this->getModule()->getIdentifier(), "payment-return"));
         $sofort->setAbortUrl(Pimcore\Tool::getHostUrl() . $this->getModule()->url($this->getModule()->getIdentifier(), "payment-return-abort"));
         $sofort->setNotificationUrl(Pimcore\Tool::getHostUrl() . $this->getModule()->url($this->getModule()->getIdentifier(), "notification"));
         $sofort->sendRequest();
@@ -55,6 +56,12 @@ class Sofortueberweisung_PaymentController extends Payment
         if($this->cart->getOrder() instanceof \CoreShop\Model\Order) {
             $this->redirect($this->getModule()->getConfirmationUrl($this->cart->getOrder()));
         }
+        else {
+            //Sofortüberweißgung did return to success, but we did not yet got notified, so we create the order
+            $order = $this->getModule()->createOrder($this->cart, \CoreShop\Model\OrderState::getById(\CoreShop\Model\Configuration::get("SYSTEM.ORDERSTATE.PREPERATION")), $this->cart->getTotal(), $this->view->language); //TODO: Fix Language
+
+            $this->redirect($this->getModule()->getConfirmationUrl($order));
+        }
 
         $this->redirect($this->view->url(array(), "coreshop_index"));
     }
@@ -78,13 +85,27 @@ class Sofortueberweisung_PaymentController extends Payment
 
         $cart = \CoreShop\Model\Cart::findByCustomIdentifier($SofortLib_Notification->getTransactionId());
 
+        \Logger::info("Sofortüberweißung: Status:" . $SofortLibTransactionData->getStatus());
+
         if($SofortLibTransactionData->getStatus() === "received" || $SofortLibTransactionData->getStatus() === "pending") {
-            $order = $this->getModule()->createOrder($cart, \CoreShop\Model\OrderState::getById(\CoreShop\Model\Configuration::get("SYSTEM.ORDERSTATE.PAYMENT")), $cart->getTotal(), "en"); //TODO: Fix Language
+            if(!$cart->getOrder() instanceof \CoreShop\Model\Order)
+            {
+                $order = $this->getModule()->createOrder($cart, \CoreShop\Model\OrderState::getById(\CoreShop\Model\Configuration::get("SYSTEM.ORDERSTATE.PAYMENT")), $cart->getTotal(), "en"); //TODO: Fix Language
+            }
+            else
+            {
+                //Maybe order was already created by payment-return action?
+                $order = $cart->getOrder();
+            }
 
             $payments = $order->getPayments();
 
             foreach ($payments as $p) {
-                $dataBrick = new \Pimcore\Model\Object\Objectbrick\Data\CoreShopPaymentSofortueberweisung($p);
+                $dataBrick = $p->getPaymentInformation()->getCoreShopPaymentSofortueberweisung();
+
+                if(!$dataBrick) {
+                    $dataBrick = new \Pimcore\Model\Object\Objectbrick\Data\CoreShopPaymentSofortueberweisung($p);
+                }
 
                 $dataBrick->setTransactionId($SofortLib_Notification->getTransactionId());
                 $dataBrick->setStatus($SofortLibTransactionData->getStatus());
@@ -95,9 +116,6 @@ class Sofortueberweisung_PaymentController extends Payment
 
                 $p->save();
             }
-        }
-        else {
-            \Logger::info("Sofortüberweißung: Status:" . $SofortLibTransactionData->getStatus());
         }
 
         exit;
