@@ -1,51 +1,107 @@
 <?php
+/**
+ * Sofortueberweisung
+ *
+ * LICENSE
+ *
+ * This source file is subject to the GNU General Public License version 3 (GPLv3)
+ * For the full copyright and license information, please view the LICENSE.md and gpl-3.0.txt
+ * files that are distributed with this source code.
+ *
+ * @copyright  Copyright (c) 2015 Dominik Pfaffenbauer (http://dominik.pfaffenbauer.at)
+ * @license    http://www.coreshop.org/license     GNU General Public License version 3 (GPLv3)
+ */
 
+namespace Sofortueberweisung;
 
-class Sofortueberweisung_Plugin  extends Pimcore_API_Plugin_Abstract implements Pimcore_API_Plugin_Interface 
+use Pimcore\API\Plugin\AbstractPlugin;
+use Pimcore\API\Plugin\PluginInterface;
+
+class Plugin extends AbstractPlugin implements PluginInterface
 {
-/*
+    /**
+     * @var Shop
+     */
+    private static $shop;
 
-    public function init() {
-        // register your events here
-
-        // using anonymous function
-        Pimcore::getEventManager()->attach("document.postAdd", function ($event) {
-            // do something
-            $document = $event->getTarget();
-        });
-
-        // using methods
-        Pimcore::getEventManager()->attach("document.postUpdate", array($this, "handleDocument"));
-
-        // for more information regarding events, please visit:
-        // http://www.pimcore.org/wiki/display/PIMCORE/Event+API+%28EventManager%29+since+2.1.1
-        // http://framework.zend.com/manual/1.12/de/zend.event-manager.event-manager.html
-        // http://www.pimcore.org/wiki/pages/viewpage.action?pageId=12124202
-
-    }
-*/
-
-    protected static $installedFileName = "/var/config/.sofortueberweisung";
-
-    public static function isInstalled()
-    {
-        return file_exists(PIMCORE_WEBSITE_PATH . self::$installedFileName);
-    }
-    
+    /**
+     * @param $e
+     */
     public function preDispatch($e)
     {
-        include_once(PIMCORE_PLUGINS_PATH . '/Sofortueberweisung/vendor/autoload.php');
+        parent::preDispatch();
+
+        self::getShop()->attachEvents();
     }
 
+    /**
+     * @return Shop
+     */
+    public static function getShop()
+    {
+        if (!self::$shop) {
+            self::$shop = new Shop();
+        }
+        return self::$shop;
+    }
+
+    /**
+     * Check if Plugin is installed
+     *
+     * @return bool
+     */
+    public static function isInstalled()
+    {
+        try {
+            \Pimcore\Model\Object\Objectbrick\Definition::getByKey("CoreShopPaymentSofortueberweisung");
+
+            return true;
+        }
+        catch(\Exception $e) {
+
+        }
+
+        return false;
+    }
+
+    /**
+     * Install Plugin
+     */
     public static function install()
     {
-        touch(PIMCORE_WEBSITE_PATH . self::$installedFileName);
+        if (class_exists("\\CoreShop\\Plugin")) {
+            \CoreShop\Plugin::installPlugin(self::getShop()->getInstall());
+        }
     }
-    
+
+    /**
+     * Uninstall Plugin
+     */
     public static function uninstall()
     {
-        unlink(PIMCORE_WEBSITE_PATH . self::$installedFileName);
+        if (class_exists("\\CoreShop\\Plugin")) {
+            \CoreShop\Plugin::uninstallPlugin(self::getShop()->getInstall());
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public static function getTranslationFileDirectory()
+    {
+        return PIMCORE_PLUGINS_PATH . '/CoreShopCod/static/texts';
+    }
+
+    /**
+     * @param string $language
+     * @return string path to the translation file relative to plugin directory
+     */
+    public static function getTranslationFile($language)
+    {
+        if (is_file(self::getTranslationFileDirectory() . "/$language.csv")) {
+            return "/Sofortueberweisung/static/texts/$language.csv";
+        } else {
+            return '/Sofortueberweisung/static/texts/en.csv';
+        }
     }
 }
-
-

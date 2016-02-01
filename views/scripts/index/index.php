@@ -1,2 +1,0 @@
-
-Sofortueberweisung Plugin works!
