@@ -1,6 +1,6 @@
 <?php
 /**
- * Sofortueberweisung
+ * Sofortueberweisung.
  *
  * LICENSE
  *
@@ -11,9 +11,7 @@
  * @copyright  Copyright (c) 2015 Dominik Pfaffenbauer (http://dominik.pfaffenbauer.at)
  * @license    http://www.coreshop.org/license     GNU General Public License version 3 (GPLv3)
  */
-
 use CoreShop\Model;
-use Pimcore\Model\Object\CoreShopPayment;
 
 class Sofortueberweisung_AdminController extends \CoreShop\Plugin\Controller\Admin
 {
@@ -21,7 +19,7 @@ class Sofortueberweisung_AdminController extends \CoreShop\Plugin\Controller\Adm
     {
         $config = new Model\Configuration\Listing();
         $config->setFilter(function ($entry) {
-            if (startsWith($entry['key'], "SOFORTUEBERWEISUNG.")) {
+            if (startsWith($entry['key'], 'SOFORTUEBERWEISUNG.')) {
                 return true;
             }
 
@@ -35,7 +33,7 @@ class Sofortueberweisung_AdminController extends \CoreShop\Plugin\Controller\Adm
         }
 
         $response = array(
-            "values" => $valueArray,
+            'values' => $valueArray,
         );
 
         $this->_helper->json($response);
@@ -44,7 +42,7 @@ class Sofortueberweisung_AdminController extends \CoreShop\Plugin\Controller\Adm
 
     public function setAction()
     {
-        $values = \Zend_Json::decode($this->getParam("data"));
+        $values = \Zend_Json::decode($this->getParam('data'));
 
         $values = array_htmlspecialchars($values);
 
@@ -52,6 +50,6 @@ class Sofortueberweisung_AdminController extends \CoreShop\Plugin\Controller\Adm
             Model\Configuration::set($key, $value);
         }
 
-        $this->_helper->json(array("success" => true));
+        $this->_helper->json(array('success' => true));
     }
 }

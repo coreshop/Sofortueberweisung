@@ -1,6 +1,6 @@
 <?php
 /**
- * Sofortueberweisung
+ * Sofortueberweisung.
  *
  * LICENSE
  *
@@ -11,16 +11,13 @@
  * @copyright  Copyright (c) 2015 Dominik Pfaffenbauer (http://dominik.pfaffenbauer.at)
  * @license    http://www.coreshop.org/license     GNU General Public License version 3 (GPLv3)
  */
-
 namespace Sofortueberweisung;
 
 use CoreShop\Model\Cart;
 use CoreShop\Model\Order;
 use CoreShop\Model\Plugin\Payment as CorePayment;
 use CoreShop\Plugin as CorePlugin;
-use CoreShop\Tool;
-use Payunity\Shop\Install;
-use Sofort\SofortLib\Sofortueberweisung;
+use Sofortueberweisung\Shop\Install;
 
 class Shop extends CorePayment
 {
@@ -33,7 +30,7 @@ class Shop extends CorePayment
     {
         self::getInstall()->attachEvents();
 
-        CorePlugin::getEventManager()->attach("payment.getProvider", function ($e) {
+        CorePlugin::getEventManager()->attach('payment.getProvider', function ($e) {
             return $this;
         });
     }
@@ -43,7 +40,7 @@ class Shop extends CorePayment
      */
     public function getName()
     {
-        return "Sofortueberweisung";
+        return 'Sofortueberweisung';
     }
 
     /**
@@ -51,7 +48,7 @@ class Shop extends CorePayment
      */
     public function getDescription()
     {
-        return "";
+        return '';
     }
 
     /**
@@ -59,7 +56,7 @@ class Shop extends CorePayment
      */
     public function getImage()
     {
-        return "/plugins/Sofortueberweisung/static/img/sofortueberweisung.gif";
+        return '/plugins/Sofortueberweisung/static/img/sofortueberweisung.gif';
     }
 
     /**
@@ -67,11 +64,12 @@ class Shop extends CorePayment
      */
     public function getIdentifier()
     {
-        return "Sofortueberweisung";
+        return 'Sofortueberweisung';
     }
 
     /**
      * @param Cart $cart
+     *
      * @return int
      */
     public function getPaymentFee(Cart $cart)
@@ -80,9 +78,10 @@ class Shop extends CorePayment
     }
 
     /**
-     * Process Validation for Payment
+     * Process Validation for Payment.
      *
      * @param Cart $cart
+     *
      * @return mixed
      */
     public function process(Cart $cart)
@@ -91,18 +90,19 @@ class Shop extends CorePayment
     }
 
     /**
-     * Get url for confirmation link
+     * Get url for confirmation link.
      *
      * @param Order $order
+     *
      * @return string
      */
     public function getConfirmationUrl($order)
     {
-        return $this->url($this->getIdentifier(), 'confirmation') . "?order=" . $order->getId();
+        return $this->url($this->getIdentifier(), 'confirmation').'?order='.$order->getId();
     }
 
     /**
-     * get url for validation link
+     * get url for validation link.
      *
      * @return string
      */
@@ -112,7 +112,7 @@ class Shop extends CorePayment
     }
 
     /**
-     * get url payment link
+     * get url payment link.
      *
      * @return string
      */
@@ -122,7 +122,7 @@ class Shop extends CorePayment
     }
 
     /**
-     * get error url
+     * get error url.
      *
      * @return string
      */
@@ -139,6 +139,7 @@ class Shop extends CorePayment
         if (!self::$install) {
             self::$install = new Install();
         }
+
         return self::$install;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Sofortueberweisung
+ * Sofortueberweisung.
  *
  * LICENSE
  *
@@ -11,7 +11,6 @@
  * @copyright  Copyright (c) 2015 Dominik Pfaffenbauer (http://dominik.pfaffenbauer.at)
  * @license    http://www.coreshop.org/license     GNU General Public License version 3 (GPLv3)
  */
-
 namespace Sofortueberweisung;
 
 use Pimcore\API\Plugin\AbstractPlugin;
@@ -42,44 +41,43 @@ class Plugin extends AbstractPlugin implements PluginInterface
         if (!self::$shop) {
             self::$shop = new Shop();
         }
+
         return self::$shop;
     }
 
     /**
-     * Check if Plugin is installed
+     * Check if Plugin is installed.
      *
      * @return bool
      */
     public static function isInstalled()
     {
         try {
-            \Pimcore\Model\Object\Objectbrick\Definition::getByKey("CoreShopPaymentSofortueberweisung");
+            \Pimcore\Model\Object\Objectbrick\Definition::getByKey('CoreShopPaymentSofortueberweisung');
 
             return true;
-        }
-        catch(\Exception $e) {
-
+        } catch (\Exception $e) {
         }
 
         return false;
     }
 
     /**
-     * Install Plugin
+     * Install Plugin.
      */
     public static function install()
     {
-        if (class_exists("\\CoreShop\\Plugin")) {
+        if (class_exists('\\CoreShop\\Plugin')) {
             \CoreShop\Plugin::installPlugin(self::getShop()->getInstall());
         }
     }
 
     /**
-     * Uninstall Plugin
+     * Uninstall Plugin.
      */
     public static function uninstall()
     {
-        if (class_exists("\\CoreShop\\Plugin")) {
+        if (class_exists('\\CoreShop\\Plugin')) {
             \CoreShop\Plugin::uninstallPlugin(self::getShop()->getInstall());
         }
     }
@@ -89,16 +87,17 @@ class Plugin extends AbstractPlugin implements PluginInterface
      */
     public static function getTranslationFileDirectory()
     {
-        return PIMCORE_PLUGINS_PATH . '/CoreShopCod/static/texts';
+        return PIMCORE_PLUGINS_PATH.'/Sofortueberweisung/static/texts';
     }
 
     /**
      * @param string $language
+     *
      * @return string path to the translation file relative to plugin directory
      */
     public static function getTranslationFile($language)
     {
-        if (is_file(self::getTranslationFileDirectory() . "/$language.csv")) {
+        if (is_file(self::getTranslationFileDirectory()."/$language.csv")) {
             return "/Sofortueberweisung/static/texts/$language.csv";
         } else {
             return '/Sofortueberweisung/static/texts/en.csv';
