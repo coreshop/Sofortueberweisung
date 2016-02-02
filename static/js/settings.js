@@ -11,8 +11,8 @@
  * @license    http://www.coreshop.org/license     GNU General Public License version 3 (GPLv3)
  */
 
-pimcore.registerNS("pimcore.plugin.coreshop.sofortueberweisung.settings");
-pimcore.plugin.coreshop.sofortueberweisung.settings = Class.create({
+pimcore.registerNS("pimcore.plugin.sofortueberweisung.settings");
+pimcore.plugin.sofortueberweisung.settings = Class.create({
 
     initialize: function () {
         this.getData();

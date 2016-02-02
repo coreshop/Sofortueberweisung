@@ -11,40 +11,40 @@
  * @license    http://www.coreshop.org/license     GNU General Public License version 3 (GPLv3)
  */
 
-pimcore.registerNS("pimcore.plugin.coreshop.sofortueberweisung");
+$(document).on("coreShopReady", function() {
+    pimcore.registerNS("pimcore.plugin.sofortueberweisung.plugin");
+    pimcore.plugin.sofortueberweisung.plugin = Class.create(coreshop.plugin.admin, {
 
-pimcore.plugin.coreshop.sofortueberweisung = Class.create(coreshop.plugin.admin, {
+        getClassName: function () {
+            return "pimcore.plugin.sofortueberweisung.plugin";
+        },
 
-    getClassName: function() {
-        return "pimcore.plugin.coreshop.sofortueberweisung";
-    },
+        initialize: function () {
+            coreshop.plugin.broker.registerPlugin(this);
+        },
 
-    initialize: function() {
-        coreshop.plugin.broker.registerPlugin(this);
-    },
+        uninstall: function () {
+            //TODO remove from menu
+        },
 
-    uninstall: function() {
-        //TODO remove from menu
-    },
+        coreshopReady: function (coreshop, broker) {
+            coreshop.addPluginMenu({
+                text: t("coreshop_sofortueberweisung"),
+                iconCls: "coreshop_icon_sofortueberweisung",
+                handler: this.openSofortueberweisung
+            });
+        },
 
-    coreshopReady: function (coreshop, broker) {
-        coreshop.addPluginMenu({
-            text: t("coreshop_sofortueberweisung"),
-            iconCls: "coreshop_icon_sofortueberweisung",
-            handler: this.openSofortueberweisung
-        });
-    },
-
-    openSofortueberweisung : function()
-    {
-        try {
-            pimcore.globalmanager.get("coreshop_sofortueberweisung").activate();
+        openSofortueberweisung: function () {
+            try {
+                pimcore.globalmanager.get("coreshop_sofortueberweisung").activate();
+            }
+            catch (e) {
+                //console.log(e);
+                pimcore.globalmanager.add("coreshop_sofortueberweisung", new pimcore.plugin.sofortueberweisung.settings());
+            }
         }
-        catch (e) {
-            //console.log(e);
-            pimcore.globalmanager.add("coreshop_sofortueberweisung", new pimcore.plugin.coreshop.sofortueberweisung.settings());
-        }
-    }
+    });
+
+    new pimcore.plugin.sofortueberweisung.plugin();
 });
-
-new pimcore.plugin.coreshop.sofortueberweisung();
