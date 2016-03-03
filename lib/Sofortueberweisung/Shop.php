@@ -56,7 +56,7 @@ class Shop extends CorePayment
      */
     public function getImage()
     {
-        return '/plugins/Sofortueberweisung/static/img/sofortueberweisung.gif';
+        return '/plugins/Sofortueberweisung/static/img/sofortueberweisung.jpg';
     }
 
     /**
