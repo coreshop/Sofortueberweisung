@@ -1,19 +1,19 @@
 {
-    "name": "pfaffenbauer/sofortueberweisung",
-    "type": "pimcore-plugin",
-    "license": "Simple BSD",
-    "description": "Sofortueberweisung Payment",
-    "keywords": ["pimcore","sofortueberweisung"],
-    "homepage": "https://github.com/dpfaffenbauer/pimcore-sofortueberweisung",
-    "authors": [
-        {
-            "name": "Dominik Pfaffenbauer",
-            "email": "dominik@pfaffenbauer.at",
-            "homepage": "http://www.pfaffenbauer.at/",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "sofort/sofortlib-php" : "~3.0.5"
-    }
-}  
+  "name": "coreshop/sofortueberweisung",
+  "type": "pimcore-plugin",
+  "license": "GPLv3",
+  "description": "Sofortueberweisung Payment for CoreShop",
+  "keywords": ["pimcore", "coreshop", "Sofortueberweisung", "coreshop-payment"],
+  "homepage": "http://www.coreshop.org",
+  "authors": [{
+    "name": "Dominik Pfaffenbauer",
+    "email": "dominik@pfaffenbauer.at",
+    "homepage": "http://www.pfaffenbauer.at/",
+    "role": "Developer"
+  }],
+  "require": {
+    "pimcore/installer-plugin": ">=1",
+    "coreshop/core-shop" : "dev-master",
+    "sofort/sofortlib-php" : "~3.0.5"
+  }
+}
