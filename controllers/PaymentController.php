@@ -11,6 +11,7 @@
  * @copyright  Copyright (c) 2015 Dominik Pfaffenbauer (http://dominik.pfaffenbauer.at)
  * @license    http://www.coreshop.org/license     GNU General Public License version 3 (GPLv3)
  */
+
 use CoreShop\Controller\Action\Payment;
 use CoreShop\Tool;
 
@@ -92,7 +93,7 @@ class Sofortueberweisung_PaymentController extends Payment
         $orderId = $this->getParam('order');
 
         if ($orderId) {
-            $order = \Pimcore\Model\Object\CoreShopOrder::getById($orderId);
+            $order = \CoreShop\Model\Order::getById($orderId);
 
             if ($order instanceof \CoreShop\Model\Order) {
                 $this->session->order = $order;
