@@ -12,5 +12,5 @@ sofortueberweisung Payment Plugin for Pimcore
 Install with composer
 
 ```
-composer require coreshop/sofortueberweisung dev-master
+composer require coreshop/sofortueberweisung 1.0
 ```
