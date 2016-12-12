@@ -13,7 +13,6 @@
  */
 
 use CoreShop\Controller\Action\Payment;
-use CoreShop\Tool;
 
 /**
  * Class Sofortueberweisung_PaymentController
@@ -25,10 +24,10 @@ class Sofortueberweisung_PaymentController extends Payment
         $configkey = \CoreShop\Model\Configuration::get('SOFORTUEBERWEISUNG.KEY');
 
         $sofort = new \Sofort\SofortLib\Sofortueberweisung($configkey);
-        $sofort->setAmount(Tool::numberFormat($this->cart->getTotal()));
+        $sofort->setAmount(\CoreShop::getTools()->numberFormat($this->cart->getTotal()));
         $sofort->setVersion('CoreShop '.\CoreShop\Version::getVersion());
         $sofort->setReason('Buy Order (CoreShop)');
-        $sofort->setCurrencyCode(Tool::getCurrency()->getIsoCode());
+        $sofort->setCurrencyCode(\CoreShop::getTools()->getCurrency()->getIsoCode());
         $sofort->setSuccessUrl(Pimcore\Tool::getHostUrl().$this->getModule()->url($this->getModule()->getIdentifier(), 'payment-return'));
         $sofort->setAbortUrl(Pimcore\Tool::getHostUrl().$this->getModule()->url($this->getModule()->getIdentifier(), 'payment-return-abort'));
         $sofort->sendRequest();
