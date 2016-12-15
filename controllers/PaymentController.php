@@ -58,7 +58,13 @@ class Sofortueberweisung_PaymentController extends Payment
         $SofortLibTransactionData->sendRequest();
 
         if ($SofortLibTransactionData->getStatus() === 'received' || $SofortLibTransactionData->getStatus() === 'pending') {
-            $order = $this->cart->createOrder(\CoreShop\Model\Order\State::getById(\CoreShop\Model\Configuration::get("SYSTEM.ORDERSTATE.PAYMENT")), $this->getModule(), $this->cart->getTotal(), $this->view->language);
+
+            $order = $this->cart->createOrder(
+                \CoreShop\Model\Order\State::getByIdentifier('PAYMENT'),
+                $this->getModule(),
+                $this->cart->getTotal(),
+                $this->view->language
+            );
 
             $payments = $order->getPayments();
 
