@@ -1,4 +1,4 @@
-Sofortüberweißung
+Sofortüberweisung
 ================
 
 [![Latest Stable Version](https://poser.pugx.org/coreshop/sofortueberweisung/v/stable)](https://packagist.org/packages/coreshop/sofortueberweisung)
